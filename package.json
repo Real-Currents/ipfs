@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "ipfs": "^0.59.1",
+    "ipfs-http-gateway": "^0.7.1",
+    "js-ipfs": "file:js-ipfs"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}

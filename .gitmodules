@@ -1,0 +1,3 @@
+[submodule "js-ipfs"]
+	path = js-ipfs
+	url = git@github.com:Real-Currents/js-ipfs.git
