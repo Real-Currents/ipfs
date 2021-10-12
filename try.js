@@ -10,6 +10,15 @@ async function main () {
   });
   const version = await node.version();
 
+  // // start the API gateway
+  const HttpGateway = require('ipfs-http-gateway').HttpGateway;
+  console.log(typeof HttpGateway);
+  console.log(HttpGateway);
+  const gateway = new HttpGateway(node);
+  gateway.start();
+  console.log('Version:', version.version);
+  // // ...
+
   // PUT SOME DATA
   const put_data = 'Hello, John'
 
@@ -42,15 +51,6 @@ async function main () {
       // function
 
     }
-
-  // // start the API gateway
-  const HttpGateway = require('ipfs-http-gateway').HttpGateway;
-  console.log(typeof HttpGateway);
-  console.log(HttpGateway);
-  const gateway = new HttpGateway(node);
-  gateway.start();
-  console.log('Version:', version.version);
-  // // ...
 
   // GET SOME DATA
   let get_data = ''
