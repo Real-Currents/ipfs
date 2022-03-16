@@ -1,8 +1,10 @@
 {
   "dependencies": {
-    "ipfs": "^0.59.1",
+    "always": "^2.2.0",
+    "event-stream": "^4.0.1",
+    "ipfs": "^0.62.1",
     "ipfs-http-gateway": "^0.7.1",
-    "js-ipfs": "file:js-ipfs"
+    "js-ipfs": "git+https://github.com/Real-Currents/js-ipfs.git#real/currents"
   },
   "devDependencies": {
     "lerna": "^4.0.0"
