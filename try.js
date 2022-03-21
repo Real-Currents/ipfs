@@ -1,25 +1,30 @@
 // const IPFS = require('/usr/local/lib/node_modules/ipfs')
 const IPFS = require('ipfs')
-const { globSource } = IPFS
+// const { globSource } = IPFS
+const HttpApi = require('ipfs-http-server').HttpApi;
+const HttpGateway = require('ipfs-http-gateway').HttpGateway;
 const fs = require('fs');
 const es = require('event-stream');
 
 async function main () {
-    const node = await IPFS.create({
-        "Addresses": {
-            "API": "/ip4/127.0.0.1/tcp/5001",
-            "Gateway": "/ip4/127.0.0.1/tcp/8088"
-        }
-    });
+    const node = await (async function () {
+        return IPFS.create();
+    }());
     const version = await node.version();
 
-    // // start the API gateway
-    const HttpGateway = require('ipfs-http-gateway').HttpGateway;
-    console.log(typeof HttpGateway);
-    console.log(HttpGateway);
-    const gateway = new HttpGateway(node);
-    gateway.start();
     console.log('Version:', version.version);
+
+    // startipfs daemon API server
+    const ipfsAPI = new HttpApi(node) // leaving out the arguments will default to these values
+    await ipfsAPI.start();
+
+    console.log("API Server", await ipfsAPI.apiAddr);
+
+    // // start the API gateway
+    const gateway = new HttpGateway(node);
+    await gateway.start();
+
+    console.log("Local Gateway ", await gateway._ipfs.config.getAll());
     // // ...
 
     // CREATE A DIR
@@ -27,9 +32,9 @@ async function main () {
     let dir_cid_path = dir_path;
     try {
         const dir_metadata= await (async () => {
+            let stats;
             try {
-                const stats = await node.files.stat("/" + dir_path);
-                return stats;
+                stats = await node.files.stat("/" + dir_path);
 
             } catch (e) {
                 console.log("Directory does not exist. Create " + "/" + dir_path);
@@ -38,9 +43,11 @@ async function main () {
                 for await (const dir of await node.addAll([{
                     path: "/" + dir_path
                 }])) {
-                    return dir;
+                    stats = dir;
                 }
             }
+
+            return stats;
         })();
 
         console.log(dir_metadata);
